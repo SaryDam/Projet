@@ -14,12 +14,14 @@ export class UserJSONService implements UserService {
             }
             this.data = data;
         }) 
-        
+        const userExist = this.getByUsername(username);
+        if (userExist){
+            console.error('le nom existe deja')
+        }else{
             let utilisateur = JSON.parse(this.data);
             const Id = this.genererId()
             
             this.newUser = new user(Id, username);
-            console.log(this.newUser)
             utilisateur.push(this.newUser);
             
             const addUser = JSON.stringify(utilisateur);
@@ -29,11 +31,28 @@ export class UserJSONService implements UserService {
                     throw new Error('erreur lors de l\'ecriture du fichier');
                 }
             })
+        }
         return this.newUser
     }
 
     genererId() : number {
         return Math.floor(Math.random() * 999999);
+    }
+
+    getByUsername(username: string): user | null {
+        readFile('./src/user/utilisateurJson.json', 'utf8', (err, data) => {
+            if (err){
+                console.error('erreur de lecture')
+            }
+            this.data = data;
+        }) 
+        const dataJson = JSON.parse(this.data);
+        for(let i = 0; i < dataJson.length; i++){
+            if (dataJson[i].username == username){
+                this.newUser = dataJson[i]
+            }
+        }
+    return this.newUser;
     }
 
     getById(id: number): user | null {
@@ -42,10 +61,8 @@ export class UserJSONService implements UserService {
                 console.error('erreur de lecture')
             }
             this.data = data;
-            console.log("11111111111111111111111111");
         }) 
         const dataJson = JSON.parse(this.data);
-        console.log("2222222222222222222222");
         for(let i = 0; i < dataJson.length; i++){
             if (dataJson[i].id == id){
                 this.newUser = dataJson[i]
