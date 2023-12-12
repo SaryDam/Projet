@@ -1,9 +1,16 @@
 import express from 'express';
-import { ExpressRouter } from './expresse-router';
+import {ExpressRouter} from './expresse-router';
 import bodyParser from 'body-parser';
 
 export class ExpressServer {
+
+    private cors = require('cors');
+
+    private bodyParser = require('body-parser');
+
+
     private express = express();
+
 
     constructor(
         private expressRouter: ExpressRouter,
@@ -14,6 +21,8 @@ export class ExpressServer {
     }
 
     bootstrap(): void {
+        this.express.use(this.cors());
+        this.express.use(this.bodyParser.json());
         this.express.listen(this.port, () => {
             console.log(`> Listening on port ${this.port}`);
         });
@@ -26,4 +35,6 @@ export class ExpressServer {
     private configureRoutes(): void {
         this.express.use('/api', this.expressRouter.router);
     }
+
+
 }

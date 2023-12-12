@@ -1,20 +1,27 @@
-import { user } from './user';
-import { UserService } from './user.service';
+import {user} from './user';
+import {UserService} from './user.service';
 
 export class UserController {
-    constructor(private userService: UserService) {}
+    constructor(private userService: UserService) {
+    }
 
-    add(username: string): user {
-        // is the username empty ?
-        // is the username whitespaced ?
-        // other checks...
-        return this.userService.add(username);
+    add(username: string, prenom: string, nom: string, mail: string): user {
+        return this.userService.add(username, nom, prenom, mail);
     }
 
     getById(id: number): user | null {
-        // is the id a decimal ?
-        // is the id a negative number ?
-        // other checks...
         return this.userService.getById(id);
+    }
+
+    async getAllUser(): Promise<user[] | null> {
+        return this.userService.getAllUser();
+    }
+
+    deleteUser(id: number): user | null {
+        return this.userService.deleteUser(id);
+    }
+
+    updateUser(id: number, updatedUserData: Partial<user>): user | null {
+        return this.userService.updateUser(id, updatedUserData);
     }
 }
